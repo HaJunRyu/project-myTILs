@@ -9,7 +9,7 @@ const {
   createUser,
   emailReduplicateValidation,
   nicknameReduplicateValidation,
-  getUserPrimarykey
+  getUserPrimarykey,
 } = require('./dao/usersDAO');
 
 const { getTils } = require('./dao/tilDAO');
@@ -54,22 +54,24 @@ app.post('/signup', (req, res) => {
     if (emailValidationResult || nicknameValidationResult) {
       const reduplicate = {
         email: false,
-        nickname: false
+        nickname: false,
       };
       if (nicknameValidationResult) reduplicate.nickname = true;
       if (emailValidationResult) reduplicate.email = true;
-      res.json(reduplicate);
+      res.status(401).json(reduplicate);
     }
 
-    console.log(await createUser(fileds));
+    await createUser(fileds);
 
-    res.send({ complete: true });
+    const createUserInfo = await emailReduplicateValidation(fileds);
+
+    res.status(201).json(createUserInfo);
   });
 });
 
 app.get('/tils/:nickname', async (req, res) => {
   const {
-    params: { nickname }
+    params: { nickname },
   } = req;
   const rows = await getUserPrimarykey(nickname);
   if (rows) {
@@ -89,7 +91,7 @@ app.post('/image_upload', (req, res) => {
       Bucket: 'aws-devfolio',
       Key: files.image.name,
       ACL: 'public-read',
-      Body: require('fs').createReadStream(files.image.path)
+      Body: require('fs').createReadStream(files.image.path),
     };
     s3.upload(params, (err, data) => {
       console.log(data);
@@ -98,7 +100,7 @@ app.post('/image_upload', (req, res) => {
       else {
         result = JSON.stringify({
           src: data.Location,
-          alt: data.Key
+          alt: data.Key,
         });
       }
       res.send(result);
