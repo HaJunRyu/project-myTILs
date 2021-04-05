@@ -2,15 +2,15 @@ const mysql = require('mysql2/promise');
 const dbconfig = require('../config/database.js');
 const pool = mysql.createPool(dbconfig);
 
-exports.createUser = async ({ email, nickname, profile_photo, sign_up_date = new Date() } = {}) => {
+exports.createUser = async ({ email, nickname, photo_url, sign_up_date = new Date() } = {}) => {
   try {
     const connection = await pool.getConnection(async conn => conn);
     try {
       const [
-        rows
+        rows,
       ] = await connection.query(
-        'INSERT INTO users(email, nickname, profile_photo, sign_up_date) values (?, ?, ?, ?)',
-        [email, nickname, profile_photo, sign_up_date]
+        'INSERT INTO users(email, nickname, photo_url, sign_up_date) values (?, ?, ?, ?)',
+        [email, nickname, photo_url, sign_up_date]
       );
       connection.release();
       return rows;
@@ -60,7 +60,7 @@ exports.getUserPrimarykey = async nickname => {
     const connection = await pool.getConnection(async conn => conn);
     try {
       const [rows] = await connection.query('SELECT idusers FROM users WHERE nickname=(?)', [
-        nickname
+        nickname,
       ]);
       connection.release();
       return rows[0];
