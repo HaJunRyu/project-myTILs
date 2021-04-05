@@ -15,6 +15,16 @@ const ajax = {
       email,
     });
   },
+
+  async fetchTils() {},
+
+  async createTil(user_id, subject, contents) {
+    return await axios.post(`${API_URL}/create_til`, {
+      user_id,
+      subject,
+      contents,
+    });
+  },
 };
 
 export default ajax;
