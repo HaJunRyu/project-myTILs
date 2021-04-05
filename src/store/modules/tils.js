@@ -46,7 +46,7 @@ export const createTilErrorAction = error => ({
 });
 
 // 4. reducer 함수
-export const tilReducer = (state = initialState, action) => {
+const tilReducer = (state = initialState, action) => {
   switch (action.type) {
     case CREATE_TIL_LOADING:
       return {
@@ -88,3 +88,5 @@ export const createTilLoadingAsync = (subject, contents) => async dispatch => {
     dispatch(createTilErrorAction(error));
   }
 };
+
+export default tilReducer;
