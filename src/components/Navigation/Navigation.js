@@ -43,7 +43,7 @@ function Navigation({ className }) {
       {isModal && (
         <Portal id="modal-root">
           <Modal isModal={isModal} setIsModal={setIsModal}>
-            <Dialog />
+            <Dialog isModal={isModal} setIsModal={setIsModal} />
           </Modal>
         </Portal>
       )}
