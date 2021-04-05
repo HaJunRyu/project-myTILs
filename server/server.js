@@ -63,7 +63,9 @@ app.post('/signup', (req, res) => {
 
     await createUser(fileds);
 
-    res.status(201).json(fileds);
+    const createUserInfo = await emailReduplicateValidation(fileds);
+
+    res.status(201).json(createUserInfo);
   });
 });
 
