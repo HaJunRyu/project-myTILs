@@ -2,7 +2,6 @@ import Button from 'components/Button/Button';
 import Dialog from 'components/Dialog';
 import Modal from 'components/Modal';
 import Portal from 'components/Portal';
-import ModalContainer from 'containers/ModalContainer';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
@@ -31,7 +30,7 @@ function Navigation({ className }) {
       {isModal && (
         <Portal id="modal-root">
           <Modal isModal={isModal} setIsModal={setIsModal}>
-            <Dialog />
+            <Dialog isModal={isModal} setIsModal={setIsModal} />
           </Modal>
         </Portal>
       )}
