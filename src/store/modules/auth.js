@@ -9,22 +9,17 @@ const SIGNIN_LOADING = 'auth/SIGNIN_LOADING';
 const SIGNIN_SUCCESS = 'auth/SIGNIN_SUCCESS';
 const SIGNIN_ERROR = 'auth/SIGNIN_ERROR';
 
+const SIGNOUT = 'auth/SIGNOUT';
+
 // 2. 초기 상태 정의 (배열, 객체, 원시값 자유)
 const initialState = {
-  signup: {
-    loading: false,
-    currentUser: null,
-    error: null,
-  },
-  signin: {
-    loading: false,
-    currentUser: null,
-    error: null,
-  },
+  loading: false,
+  currentUser: null,
+  error: null,
 };
 
 // 3. reducer 함수
-const authReducer = (state, action) => {
+const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case SIGNUP_LOADING:
       return {
@@ -35,7 +30,7 @@ const authReducer = (state, action) => {
       return {
         ...state,
         loading: false,
-        currentUser: action.payload.currentUser,
+        currentUser: action.payload.userInfo,
       };
     case SIGNUP_ERROR:
       return {
@@ -57,6 +52,8 @@ const authReducer = (state, action) => {
         ...state,
         error: action.error,
       };
+    case SIGNOUT:
+      return initialState;
     default:
       return state;
   }
@@ -71,17 +68,34 @@ const signinLoadingAction = () => ({ type: SIGNIN_LOADING });
 const signinSuccessAction = () => ({ type: SIGNIN_SUCCESS });
 const signinErrorAction = () => ({ type: SIGNIN_ERROR });
 
+// signoutAction은 미들웨어가 필요없기 때문에 바로 내보내줬음
+export const signoutAction = () => ({ type: SIGNOUT });
+
 // 5. 썽크 액션 크리에이터
-const signUpLoadingAsync = payload => async dispatch => {
+export const signUpAsync = payload => async dispatch => {
   // 요청이 시작됨
   dispatch(signupLoadingAction());
   try {
     // API를 호출
-    const posts = await ajax.signUp();
+    const res = await ajax.signUp(payload);
+    const { userInfo } = res;
     // 성공했을때
-    dispatch({ ...signupSuccessAction(), payload });
+    dispatch({ ...signupSuccessAction(), payload: userInfo });
   } catch (error) {
     // 실패했을떄
     dispatch({ ...signupErrorAction(), error });
   }
 };
+
+export const signInAsync = email => async dispatch => {
+  dispatch(signinLoadingAction());
+  try {
+    const res = await ajax.signIn(email);
+    const { userInfo } = res;
+    dispatch({ ...signinSuccessAction(), userInfo });
+  } catch (error) {
+    dispatch({ ...signinErrorAction(), error });
+  }
+};
+
+export default authReducer;
