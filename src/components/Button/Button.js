@@ -1,4 +1,4 @@
-import { string, oneOf } from 'prop-types';
+import { string, oneOf, node } from 'prop-types';
 
 const Button = ({ type = 'button', className = '', children, ...restProps }) => {
   return (
@@ -11,7 +11,7 @@ const Button = ({ type = 'button', className = '', children, ...restProps }) => 
 Button.propTypes = {
   type: oneOf(['button', 'submit']),
   className: string,
-  children: string,
+  children: node,
 };
 
 export default Button;
