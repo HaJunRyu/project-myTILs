@@ -78,7 +78,7 @@ export const signUpAsync = payload => async dispatch => {
   try {
     // API를 호출
     const res = await ajax.signUp(payload);
-    const { userInfo } = res;
+    const userInfo = res.data;
     // 성공했을때
     dispatch({ ...signupSuccessAction(), payload: userInfo });
   } catch (error) {
@@ -91,7 +91,7 @@ export const signInAsync = email => async dispatch => {
   dispatch(signinLoadingAction());
   try {
     const res = await ajax.signIn(email);
-    const { userInfo } = res;
+    const userInfo = res.data;
     dispatch({ ...signinSuccessAction(), userInfo });
   } catch (error) {
     dispatch({ ...signinErrorAction(), error });
