@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from './Button/Button';
 import { ReactComponent as GoogleIcon } from 'assets/icon-google.svg';
+import { auth, signInWithGoogle, signOut as signOutGoogle } from './servies/firebase';
 
 const Header1 = styled.h1`
   text-align: center;
@@ -68,11 +69,30 @@ const SmallText = styled.small`
   font-weight: 400;
 `;
 
-const Dialog = () => {
+const Dialog = ({ isModal, setIsModal }) => {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    auth.onAuthStateChanged(currentUser => {
+      console.log(currentUser);
+    });
+  }, []);
+
+  const signIn = () => {
+    signInWithGoogle()
+      .then(response => response.user)
+      .then(user => console.log(`${user.displayName}님 로그인 인증에 성공했습니다.`))
+      .catch(error => console.error(error.message));
+  };
+
+  const signOut = () => {
+    signOutGoogle().then(() => console.log('로그아웃'));
+  };
+
   return (
     <div>
       <Header1>시작하기</Header1>
-      <GoogleLoginButton>
+      <GoogleLoginButton onClick={signIn}>
         <GoogleIcon width={'18px'} height={'18px'} />
         <ButtonText>Google</ButtonText>
       </GoogleLoginButton>
