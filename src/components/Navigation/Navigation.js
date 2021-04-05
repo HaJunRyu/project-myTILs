@@ -1,5 +1,9 @@
 import Button from 'components/Button/Button';
-import React from 'react';
+import Dialog from 'components/Dialog';
+import Modal from 'components/Modal';
+import Portal from 'components/Portal';
+import ModalContainer from 'containers/ModalContainer';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 // 로그인 버튼 스타일링
@@ -15,9 +19,22 @@ const LoginButton = styled(Button)`
 
 // 네비게이션 컴포넌트
 function Navigation({ className }) {
+  const [isModal, setIsModal] = useState(false);
+
+  const onModalChangeHandler = () => {
+    setIsModal(!isModal);
+  };
+
   return (
     <nav className={className}>
-      <LoginButton>로그인</LoginButton>
+      <LoginButton onClick={onModalChangeHandler}>로그인</LoginButton>
+      {isModal && (
+        <Portal id="modal-root">
+          <Modal isModal={isModal} setIsModal={setIsModal}>
+            <Dialog />
+          </Modal>
+        </Portal>
+      )}
     </nav>
   );
 }

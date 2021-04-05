@@ -12,7 +12,7 @@ const {
   getUserPrimarykey,
 } = require('./dao/usersDAO');
 
-const { getTils } = require('./dao/tilDAO');
+const { getTils, createTil } = require('./dao/tilDAO');
 
 const fs = require('fs');
 const formidable = require('formidable');
@@ -105,6 +105,19 @@ app.post('/image_upload', (req, res) => {
       }
       res.send(result);
     });
+  });
+});
+
+app.post('/create_til', (req, res) => {
+  const form = new formidable.IncomingForm();
+  form.parse(req, async (err, fileds, files) => {
+    if (err) {
+      res.send(err);
+    }
+
+    await createTil(fileds);
+
+    res.status(201).json({ response: true });
   });
 });
 
